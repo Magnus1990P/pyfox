@@ -64,9 +64,15 @@ def history(cursor, pattern=None, src=""):
         execute_query(cursor, sql)
 
         for row in cursor:
-            last_visit = datetime.fromtimestamp(row[2]/1000000).strftime('%Y-%m-%d %H:%M:%S')
-            link = row[0]
-            title = row[1]
+			link = "N/A"	
+			if row[0] is not None:
+				link 		= row[0].encode('utf-8')
+			title = "N/A"
+			if row[1] is not None:
+				title		= row[1].encode('utf-8')
+			last_visit  = "N/A"
+			if row[2] is not None:
+				last_visit	= datetime.fromtimestamp(row[2]/1000000).strftime('%Y%m%d_%H%M%S')
 
             html += "<tr><td><a href='" + str(link) + "'>" + str(title[:100]) +\
             "</a></td>" + "<td>" + str(last_visit) + "</td>" + "<td>" + \
@@ -105,12 +111,21 @@ def bookmarks(cursor, pattern=None):
     html = read_template()
     html_file = open("bookmarks.html", 'w')
     for row in cursor:
-        link = row[0]
-        title = row[1]
-        date = str(datetime.fromtimestamp(row[4]/1000000).strftime('%Y-%m-%d %H:%M:%S'))
+		link = "N/A"	
+		if row[0] is not None:
+			link 		= row[0].encode('utf-8')
+		title = "N/A"
+		if row[1] is not None:
+			title		= row[1].encode('utf-8')
+		date  = "N/A"
+		if row[4] is not None:
+			date	= datetime.fromtimestamp(row[4]/1000000).strftime('%Y%m%d_%H%M%S')
+		visits		= "N/A"
+		if row[3] is not None:
+			visits	= row[3]
 
         html += "<tr><td><a href='"+link+"'>"+title+"</a></td>"+"<td>"+link+\
-        "</td>"+"<td>"+date+"</td></tr>\n"
+        "</td>"+"<td>"+str(date)+"</td></tr>\n"
         print("%s %s"%(row[0], row[1]))
     html += "</tbody>\n</table>\n</body>\n</html>"
 
